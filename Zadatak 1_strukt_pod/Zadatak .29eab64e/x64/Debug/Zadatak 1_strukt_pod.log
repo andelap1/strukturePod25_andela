@@ -1,0 +1,4 @@
+﻿  Zadatak1.c
+C:\Users\38599\Desktop\vjezbe\vjezba1\Zadatak 1_strukt_pod\Zadatak1.c(102,5): warning C4033: 'ispisiStudente' must return a value
+C:\Users\38599\Desktop\vjezbe\vjezba1\Zadatak 1_strukt_pod\Zadatak1.c(103,1): warning C4716: 'ispisiStudente': must return a value
+  Zadatak 1_strukt_pod.vcxproj -> C:\Users\38599\Desktop\vjezbe\vjezba1\Zadatak 1_strukt_pod\x64\Debug\Zadatak 1_strukt_pod.exe
