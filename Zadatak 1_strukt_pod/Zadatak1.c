@@ -74,9 +74,9 @@ Stud* ucitajStudente(const char* dat, int n) {
     char buffer[MAX_RED];
     int i = 0;
     while (fgets(buffer, MAX_RED, fp) != NULL && i < n) {
-        sscanf_s(buffer, "%s %s %lf",
-            studenti[i].ime, (unsigned)_countof(studenti[i].ime),
-            studenti[i].prezime, (unsigned)_countof(studenti[i].prezime),
+        sscanf(buffer, "%s %s %lf",
+            studenti[i].ime,
+            studenti[i].prezime,
             &studenti[i].bodovi);
 
         i++;
@@ -101,3 +101,4 @@ int ispisiStudente(Stud* studenti, int n) {
 
     return;
 }
+
