@@ -1,0 +1,6 @@
+﻿  zadatak3.c
+C:\Users\38599\Desktop\Strukture podataka labovi\zadatak3\zadatak3.c(93,4): warning C4013: 'addBefore' undefined; assuming extern returning int
+C:\Users\38599\Desktop\Strukture podataka labovi\zadatak3\zadatak3.c(96,4): warning C4013: 'sortBySurname' undefined; assuming extern returning int
+C:\Users\38599\Desktop\Strukture podataka labovi\zadatak3\zadatak3.c(102,4): warning C4013: 'writeToFile' undefined; assuming extern returning int
+C:\Users\38599\Desktop\Strukture podataka labovi\zadatak3\zadatak3.c(109,4): warning C4013: 'readFromFile' undefined; assuming extern returning int
+  zadatak3.vcxproj -> C:\Users\38599\Desktop\Strukture podataka labovi\zadatak3\x64\Debug\zadatak3.exe
