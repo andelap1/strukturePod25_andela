@@ -155,8 +155,8 @@ int addAtBeginning(Position* head) {
 	if (newPerson == NULL)
 		return FILE_NOT_OPENED;
 
-	newPerson->next = *head; // novi element pokazuje na stari početak
-	*head = newPerson;       // head sada pokazuje na novi element
+	newPerson->next = head->next; // novi element pokazuje na stari početak
+	head->next = newPerson;       // head sada pokazuje na novi element
 
 	return 0;
 }
@@ -393,3 +393,4 @@ int readFromFile(Position* head, char* fileName) {
 	printf("Lista je uspješno učitana iz datoteke '%s'.\n", fileName);
 	return 0;
 }
+
