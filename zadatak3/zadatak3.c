@@ -13,32 +13,31 @@ E. čita listu iz datoteke.*/
 #define MAX_NAME 50
 #define MAX_SURNAME 50
 
-// Definiranje strukture Person
+
 typedef struct Person {
 	char name[MAX_NAME];
 	char surname[MAX_SURNAME];
 	int birthYear;
-	struct Person* next; // pokazivac na sljedeci element, veza u listi
-}Person;
+	struct Person* next; 
+} Person;
 
 typedef struct Person* Position;
 
 int addAtBeginning(Position*);
 int printList(Position);
-int addAtEnd(Position* );
-int findBySurname(Position , char*);
-int deleteBySurname(Position* , char*);
-int addAfterElement(Position , char*);
-int addBefore(Position* , char*);
-int sortBySurname(Position ); 
+int addAtEnd(Position*);
+int findBySurname(Position, char*);
+int deleteBySurname(Position*, char*);
+int addAfterElement(Position, char*);
+int addBefore(Position*, char*);
+int sortBySurname(Position);
 int writeToFile(Position, char*);
-int readFromFile(Position* , char* );
+int readFromFile(Position*, char*);
 
 int main() {
-	Position head = NULL; //pokazivac na pocetak liste, inicijaliziran na NULL
+	Position head = NULL; // početak liste
 	char surname[MAX_SURNAME];
 	int choice;
-
 
 	do {
 		printf("\n----- IZBORNIK -----\n");
@@ -55,18 +54,17 @@ int main() {
 		printf("0. Izlaz\n");
 		printf("Odabir: ");
 
-
-		if (scanf("%d", &choice) != 1) { //ako je odabir izbornika razlicit od 1
+		if (scanf("%d", &choice) != 1) { 
 			printf("Neispravan unos. Pokusajte ponovo.\n");
-			while (getchar() != '\n'); //cisti ulazni buffer od neispravnih znakova
-			continue; //preskace ostatak petlje i pocinje ispocetka
+			while (getchar() != '\n'); // čišćenje buffera
+			continue;
 		}
 
-		int result; // Za provjeru povratne vrijednosti funkcija 
+		int result;
 		switch (choice) {
 		case 1:
-			result = addAtBeginning(&head); 
-			if (result == 0) printf("Osoba dodana na pocetak.\n"); 
+			result = addAtBeginning(&head);
+			if (result == 0) printf("Osoba dodana na pocetak.\n");
 			break;
 		case 2:
 			result = addAtEnd(&head);
@@ -83,12 +81,12 @@ int main() {
 		case 5:
 			printf("Unesite prezime za brisanje: ");
 			scanf("%s", surname);
-			deleteBySurname(&head, surname); //salje se adresa heada
+			deleteBySurname(&head, surname);
 			break;
 		case 6:
 			printf("Unesite prezime osobe iza koje želite dodati: ");
 			scanf("%s", surname);
-			addAfterElement(head, surname); 
+			addAfterElement(head, surname);
 			break;
 		case 7:
 			printf("Unesite prezime osobe ispred koje želite dodati: ");
@@ -112,34 +110,34 @@ int main() {
 			readFromFile(&head, fileName);
 			break;
 		}
-
 		case 0:
 			printf("Kraj programa.\n");
 			break;
 		default:
 			printf("Nepoznata opcija.\n");
 		}
-	} while (choice != 0); //petlja se izvrsava dok korisnik ne odabere 'Izlaz'
+	} while (choice != 0);
 
-	// Oslobadanje memorije prije izlaza
+	// oslobađanje memorije cijele liste prije izlaza
 	Position temp;
-	while (head != NULL) { //dok lista nije prazna
-		temp = head; //sprema trenutni element koji treba obrisati
-		head = head->next; //postavlja head na sljedeci element
+	while (head != NULL) {
+		temp = head;
+		head = head->next;
 		free(temp);
 	}
 
 	return 0;
 }
 
-// Pomocna funkcija za kreiranje i unos podataka
+// Kreira novi čvor i traži unos podataka od korisnika
 Position createNewPerson() {
 	Position newPerson = (Position)malloc(sizeof(Person));
 	if (newPerson == NULL) {
 		printf("Greska pri alokaciji memorije!\n");
 		return NULL;
 	}
-	newPerson->next = NULL; //postavlja se pokazivac next na NULL jer ce to biti novi kraj liste 
+
+	newPerson->next = NULL; // inicijalno novi element nema sljedećeg
 
 	printf("Unesite ime:");
 	scanf(" %s", newPerson->name);
@@ -148,23 +146,22 @@ Position createNewPerson() {
 	printf("Unesite godinu rodjenja:");
 	scanf("%d", &newPerson->birthYear);
 
-	return newPerson; //vraca pokazivac na novi cvor
+	return newPerson;
 }
 
-
+// Dodaje osobu na početak liste
 int addAtBeginning(Position* head) {
 	Position newPerson = createNewPerson();
-	if (newPerson == NULL) {
+	if (newPerson == NULL)
 		return FILE_NOT_OPENED;
-	}
 
-	newPerson->next = *head; //pokazivac novog elementa se postavlja na trenutni pocetak
-	*head = newPerson; //sad head pokazuje na novi element koji je sad pocetak liste
+	newPerson->next = *head; // novi element pokazuje na stari početak
+	*head = newPerson;       // head sada pokazuje na novi element
 
 	return 0;
 }
 
-
+// Ispis svih elemenata u listi
 int printList(Position head) {
 	if (head == NULL) {
 		printf("Prazna lista.\n");
@@ -172,43 +169,37 @@ int printList(Position head) {
 	}
 
 	printf("\n------ Sadrzaj liste ------\n");
-	while (head != NULL) { // radi dok lista ne dode do kraja 
+	while (head != NULL) {
 		printf("%s %s (%d)\n", head->name, head->surname, head->birthYear);
-		head = head->next; //prelazak na sljedeci element
+		head = head->next;
 	}
 
 	return 0;
 }
 
-
-
+// Dodaje novi element na kraj liste
 int addAtEnd(Position* head) {
 	Position newPerson = createNewPerson();
-	if (newPerson == NULL) {
+	if (newPerson == NULL)
 		return FILE_NOT_OPENED;
-	}
 
-	// Ako je lista prazna
-	if (*head == NULL) {
-		*head = newPerson; //novi cvor postaje pocetak
+	if (*head == NULL) { // ako je lista prazna
+		*head = newPerson;
 		return 0;
 	}
 
-	// Tražimo zadnji element
 	Position temp = *head;
-	while (temp->next != NULL) {
+	while (temp->next != NULL) // pronalazak zadnjeg elementa
 		temp = temp->next;
-	}
 
-	// Povezujemo zadnji element s novim
-	temp->next = newPerson;
+	temp->next = newPerson; // povezivanje zadnjeg elementa s novim
 	return 0;
 }
 
-
+// Traži osobu prema prezimenu
 int findBySurname(Position head, char* surname) {
 	while (head != NULL) {
-		if (strcmp(head->surname, surname) == 0) {   // usporedba stringova, tj. prezimena
+		if (strcmp(head->surname, surname) == 0) { // ako su prezimena ista
 			printf("Pronađena osoba: %s %s (%d)\n",
 				head->name, head->surname, head->birthYear);
 			return 0;
@@ -220,10 +211,10 @@ int findBySurname(Position head, char* surname) {
 	return FILE_NOT_OPENED;
 }
 
-
+// Briše osobu prema prezimenu
 int deleteBySurname(Position* head, char* surname) {
 	if (*head == NULL) {
-		printf("Lista je prazna. Nema elemenata za brisanje.\n");
+		printf("Lista je prazna.\n");
 		return FILE_NOT_OPENED;
 	}
 
@@ -231,20 +222,17 @@ int deleteBySurname(Position* head, char* surname) {
 	Position prev = NULL;
 
 	while (current != NULL) {
-		if (strcmp(current->surname, surname) == 0) {   
-			// Ako je prvi element u listi
-			if (prev == NULL) {
+		if (strcmp(current->surname, surname) == 0) {
+			// ako je prvi element
+			if (prev == NULL)
 				*head = current->next;
-			}
-			else {
+			else
 				prev->next = current->next;
-			}
 
 			printf("Osoba s prezimenom '%s' je obrisana.\n", surname);
 			free(current);
 			return 0;
 		}
-
 		prev = current;
 		current = current->next;
 	}
@@ -253,29 +241,28 @@ int deleteBySurname(Position* head, char* surname) {
 	return FILE_NOT_OPENED;
 }
 
+// Dodaje osobu iza određene osobe prema prezimenu
 int addAfterElement(Position head, char* surname) {
-
-		Position newPerson = createNewPerson();
-		if (newPerson == NULL)
-			return FILE_NOT_OPENED;
-
-		while (head != NULL) {
-			if (strcmp(head->surname, surname) == 0) {
-				newPerson->next = head->next;
-				head->next = newPerson;
-				printf("Osoba dodana iza prezimena '%s'.\n", surname);
-				return 0;
-			}
-			head = head->next;
-		}
-
-		printf("Osoba s prezimenom '%s' nije pronađena.\n", surname);
-		free(newPerson);
+	Position newPerson = createNewPerson();
+	if (newPerson == NULL)
 		return FILE_NOT_OPENED;
-	
 
+	while (head != NULL) {
+		if (strcmp(head->surname, surname) == 0) {
+			newPerson->next = head->next; // novi element se umeće nakon trenutnog
+			head->next = newPerson;
+			printf("Osoba dodana iza prezimena '%s'.\n", surname);
+			return 0;
+		}
+		head = head->next;
+	}
+
+	printf("Osoba s prezimenom '%s' nije pronađena.\n", surname);
+	free(newPerson);
+	return FILE_NOT_OPENED;
 }
 
+// Dodaje osobu ispred određene osobe prema prezimenu
 int addBefore(Position* head, char* surname) {
 	Position newPerson = createNewPerson();
 	if (newPerson == NULL)
@@ -286,8 +273,7 @@ int addBefore(Position* head, char* surname) {
 
 	while (current != NULL) {
 		if (strcmp(current->surname, surname) == 0) {
-			if (prev == NULL) {
-				// Dodajemo na početak
+			if (prev == NULL) { // dodavanje na početak
 				newPerson->next = *head;
 				*head = newPerson;
 			}
@@ -307,13 +293,14 @@ int addBefore(Position* head, char* surname) {
 	return FILE_NOT_OPENED;
 }
 
+// Sortira listu po prezimenu (bubble sort)
 int sortBySurname(Position head) {
 	if (head == NULL || head->next == NULL)
 		return 0;
 
 	int swapped;
 	Position ptr1;
-	Position lptr = NULL;
+	Position lptr = NULL; // pokazuje na zadnji već sortiran element
 
 	do {
 		swapped = 0;
@@ -321,7 +308,7 @@ int sortBySurname(Position head) {
 
 		while (ptr1->next != lptr) {
 			if (strcmp(ptr1->surname, ptr1->next->surname) > 0) {
-				// Zamjena podataka
+				// zamjena podataka između dva čvora
 				Person temp = *ptr1;
 				strcpy(ptr1->name, ptr1->next->name);
 				strcpy(ptr1->surname, ptr1->next->surname);
@@ -335,13 +322,14 @@ int sortBySurname(Position head) {
 			}
 			ptr1 = ptr1->next;
 		}
-		lptr = ptr1;
+		lptr = ptr1; // kraj liste se postupno pomiče
 	} while (swapped);
 
 	printf("Lista je sortirana po prezimenima.\n");
 	return 0;
 }
 
+// Sprema sadržaj liste u tekstualnu datoteku
 int writeToFile(Position head, char* fileName) {
 	FILE* fp = fopen(fileName, "w");
 	if (fp == NULL) {
@@ -359,6 +347,7 @@ int writeToFile(Position head, char* fileName) {
 	return 0;
 }
 
+// Učitava listu iz datoteke (briše staru listu)
 int readFromFile(Position* head, char* fileName) {
 	FILE* fp = fopen(fileName, "r");
 	if (fp == NULL) {
@@ -366,7 +355,7 @@ int readFromFile(Position* head, char* fileName) {
 		return FILE_NOT_OPENED;
 	}
 
-	// Oslobodi staru listu ako postoji
+	// briše postojeću listu prije učitavanja nove
 	Position temp;
 	while (*head != NULL) {
 		temp = *head;
@@ -383,23 +372,24 @@ int readFromFile(Position* head, char* fileName) {
 			return FILE_NOT_OPENED;
 		}
 
-		if (fscanf(fp, " %49s %49s %d", newPerson->name, newPerson->surname, &newPerson->birthYear) != 3) {
+		if (fscanf(fp, " %49s %49s %d",
+			newPerson->name, newPerson->surname, &newPerson->birthYear) != 3) {
 			free(newPerson);
 			break;
 		}
 
 		newPerson->next = NULL;
 
+		// ako je prvi element u listi
 		if (*head == NULL)
 			*head = newPerson;
 		else
-			last->next = newPerson;
+			last->next = newPerson; // povezuje novi element s prethodnim
 
-		last = newPerson;
+		last = newPerson; // ažurira pokazivač na kraj liste
 	}
 
 	fclose(fp);
 	printf("Lista je uspješno učitana iz datoteke '%s'.\n", fileName);
 	return 0;
 }
-
