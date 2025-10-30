@@ -29,8 +29,10 @@ int addAtEnd(Position* );
 int findBySurname(Position , char*);
 int deleteBySurname(Position* , char*);
 int addAfterElement(Position , char*);
-
-
+int addBefore(Position* , char*);
+int sortBySurname(Position ); 
+int writeToFile(Position, char*);
+int readFromFile(Position* , char* );
 
 int main() {
 	Position head = NULL; //pokazivac na pocetak liste, inicijaliziran na NULL
@@ -400,3 +402,4 @@ int readFromFile(Position* head, char* fileName) {
 	printf("Lista je uspješno učitana iz datoteke '%s'.\n", fileName);
 	return 0;
 }
+
