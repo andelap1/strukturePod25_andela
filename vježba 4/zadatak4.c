@@ -50,18 +50,19 @@
 		first-->pow + second-->pow;
 		*/
     
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
+#define _CRT_SECURE_NO_WARNINGS   
+#include <stdio.h>                
+#include <stdlib.h>               
+#define FILE_NOT_OPENED -1        
 
-#define FILE_NOT_OPENED -1
 
-typedef struct _poly* Position;
+typedef struct _poly* Position;   
 typedef struct _poly {
-    int coeff;
-    int pow;
-    Position next;
+    int coeff;                    
+    int pow;                      
+    Position next;                
 } poly;
+
 
 int ReadFromFile(Position, char*);
 int PrintPoly(Position);
@@ -71,17 +72,18 @@ Position createNewEl(int, int);
 int InsertSorted(Position, Position);
 
 int main() {
-    poly firstHead = { .coeff = 0, .pow = 0, .next = NULL };
-    poly secondHead = { .coeff = 0, .pow = 0, .next = NULL };
-    poly sumHead = { .coeff = 0, .pow = 0, .next = NULL };
-    poly productHead = { .coeff = 0, .pow = 0, .next = NULL };
+    // kreiramo cetiri glave lista (prazne polinome)
+    poly firstHead = { .coeff = 0, .pow = 0, .next = NULL };   
+    poly secondHead = { .coeff = 0, .pow = 0, .next = NULL };   
+    poly sumHead = { .coeff = 0, .pow = 0, .next = NULL };      
+    poly productHead = { .coeff = 0, .pow = 0, .next = NULL };  
 
     ReadFromFile(&firstHead, "suma1.txt");
     ReadFromFile(&secondHead, "suma2.txt");
-
+	
     printf("Prvi polinom: ");
     PrintPoly(&firstHead);
-
+ 
     printf("Drugi polinom: ");
     PrintPoly(&secondHead);
 
@@ -90,87 +92,87 @@ int main() {
     PrintPoly(&sumHead);
 
     MultiplyPoly(&productHead, &firstHead, &secondHead);
-    printf("Umnožak polinoma je: ");
+    printf("Umnozak polinoma je: ");
     PrintPoly(&productHead);
 
-    return 0;
+    return 0;  
 }
 
 
 int ReadFromFile(Position head, char* fileName) {
-    FILE* fp = fopen(fileName, "r");
-    if (!fp) {
-        printf("Greška pri otvaranju datoteke %s!\n", fileName);
-        return FILE_NOT_OPENED;
+    FILE* fp = fopen(fileName, "r");     
+    if (!fp) {                            
+        printf("Greska pri otvaranju datoteke %s!\n", fileName);
+        return FILE_NOT_OPENED;           
     }
 
-    int coeff, pow;
-    while (fscanf(fp, "%d %d", &coeff, &pow) == 2) {
-        if (coeff != 0) {
-            Position newEl = createNewEl(coeff, pow);
-            InsertSorted(head, newEl);
+    int coeff, pow;                       
+    while (fscanf(fp, "%d %d", &coeff, &pow) == 2) {  // citamo parove brojeva dok ih ima
+        if (coeff != 0) {                 
+            Position newEl = createNewEl(coeff, pow);  // kreiramo novi clan
+            InsertSorted(head, newEl);                 // ubacujemo ga u sortiran redoslijed
         }
     }
 
-    fclose(fp);
-    return 0;
+    fclose(fp);                           
+    return 0;                            
 }
 
 
 int PrintPoly(Position head) {
-    Position p = head->next;
+    Position p = head->next;              // pocinjem od prvog pravog clana (preskacemo glavu)
 
-    if (p == NULL) {
-        printf("0\n");
+    if (p == NULL) {                      
+        printf("0\n");                    
         return 0;
     }
 
-    while (p != NULL) {
+    while (p != NULL) {                   
         if (p->coeff > 0 && p != head->next)
-            printf("+");
-        if (p->pow == 0)
-            printf("%d", p->coeff);
-        else if (p->pow == 1)
-            printf("%dx", p->coeff);
-        else
-            printf("%dx^%d", p->coeff, p->pow);
+            printf("+");                  // dodajemo plus ispred pozitivnih clanova osim prvog
 
-        printf(" ");
-        p = p->next;
+        if (p->pow == 0)
+            printf("%d", p->coeff);       
+        else if (p->pow == 1)
+            printf("%dx", p->coeff);      
+        else
+            printf("%dx^%d", p->coeff, p->pow); 
+
+        printf(" ");                      
+        p = p->next;                      // prelazimo na sljedeci clan
     }
-    printf("\n");
+    printf("\n");                         
     return 0;
 }
 
 
 Position createNewEl(int coeff, int pow) {
-    Position newEl = (Position)malloc(sizeof(poly));
-    if (!newEl) {
-        printf("Greška u alokaciji memorije!\n");
-        return NULL;
+    Position newEl = (Position)malloc(sizeof(poly));  
+    if (!newEl) {                                   
+        printf("Greska u alokaciji memorije!\n");
+        return FILE_NOT_OPENED;                      
     }
-    newEl->coeff = coeff;
-    newEl->pow = pow;
-    newEl->next = NULL;
-    return newEl;
+    newEl->coeff = coeff;                            
+    newEl->pow = pow;                                
+    newEl->next = NULL;                              // novi clan jos nije povezan
+    return newEl;                                    // vracamo pokazivac na novi clan
 }
 
 int InsertSorted(Position head, Position newEl) {
-    Position prev = head;
-    Position curr = head->next;
+    Position prev = head;             // prethodni clan
+    Position curr = head->next;       // trenutni clan (odmah iza glave)
 
-    // prolazi dok ne naðe mjesto gdje eksponent više nije veæi
+    // prolazimo dok eksponent trenutnog clana nije manji od novog
     while (curr != NULL && curr->pow > newEl->pow) {
-        prev = curr;
+        prev = curr;                  // pomicem pokazivace
         curr = curr->next;
     }
 
-    // ako postoji isti eksponent
+    // ako postoji clan sa istim eksponentom
     if (curr != NULL && curr->pow == newEl->pow) {
-        curr->coeff += newEl->coeff;
-        free(newEl);
+        curr->coeff += newEl->coeff;  // zbrajam koeficijente
+        free(newEl);                  
 
-        // ako je rezultat 0, brišemo taj èlan
         if (curr->coeff == 0) {
             prev->next = curr->next;
             free(curr);
@@ -178,7 +180,7 @@ int InsertSorted(Position head, Position newEl) {
         return 0;
     }
 
-    // inaèe ubacujemo novi èlan
+    // ako nema istog eksponenta, ubacujemo novi clan izmedju prev i curr
     newEl->next = curr;
     prev->next = newEl;
 
@@ -187,36 +189,38 @@ int InsertSorted(Position head, Position newEl) {
 
 
 int AddPoly(Position sum, Position p1, Position p2) {
-    Position a = p1->next;
-    Position b = p2->next;
-    Position temp = sum;
+    Position a = p1->next;    
+    Position b = p2->next;    
+    Position temp = sum;      
 
-    while (a != NULL && b != NULL) {
-        if (a->pow > b->pow) {
+    while (a != NULL && b != NULL) {        // dok oba polinoma imaju clanove
+        if (a->pow > b->pow) {              
             temp->next = createNewEl(a->coeff, a->pow);
             a = a->next;
         }
-        else if (a->pow < b->pow) {
+        else if (a->pow < b->pow) {         
             temp->next = createNewEl(b->coeff, b->pow);
             b = b->next;
         }
-        else {
-            int c = a->coeff + b->coeff;
+        else {                             
+            int c = a->coeff + b->coeff;    // zbroji koeficijente
             if (c != 0)
-                temp->next = createNewEl(c, a->pow);
+                temp->next = createNewEl(c, a->pow); // kreiraj novi clan ako nije 0
             a = a->next;
             b = b->next;
         }
         if (temp->next != NULL)
-            temp = temp->next;
+            temp = temp->next;        
     }
 
+    // ako su ostali clanovi u prvom polinomu
     while (a != NULL) {
         temp->next = createNewEl(a->coeff, a->pow);
         temp = temp->next;
         a = a->next;
     }
 
+    // ako su ostali clanovi u drugom polinomu
     while (b != NULL) {
         temp->next = createNewEl(b->coeff, b->pow);
         temp = temp->next;
@@ -228,15 +232,17 @@ int AddPoly(Position sum, Position p1, Position p2) {
 
 
 int MultiplyPoly(Position result, Position p1, Position p2) {
-    Position a = p1->next;
-    while (a != NULL) {
-        Position b = p2->next;
-        while (b != NULL) {
-            Position newEl = createNewEl(a->coeff * b->coeff, a->pow + b->pow);
-            InsertSorted(result, newEl);
-            b = b->next;
+    Position a = p1->next;                    
+    while (a != NULL) {                       // prolaz kroz clanove prvog polinoma
+        Position b = p2->next;                
+        while (b != NULL) {                   // prolaz kroz clanove drugog polinoma
+            Position newEl = createNewEl(a->coeff * b->coeff, a->pow + b->pow); // mnozimo clanove
+            InsertSorted(result, newEl);      // ubacujem rezultat u sortiran redoslijed
+            b = b->next;                      // sljedeci clan drugog polinoma
         }
-        a = a->next;
+        a = a->next;                          // sljedeci clan prvog polinoma
     }
     return 0;
 }
+
+
