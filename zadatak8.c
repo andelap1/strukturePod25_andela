@@ -1,6 +1,6 @@
-/*Napisati program koji omoguæava rad s binarnim stablom pretraživanja. Treba
-omoguæiti unošenje novog elementa u stablo, ispis elemenata (inorder, preorder, postorder i
-level order), brisanje i pronalaženje nekog elementa.*/
+/*Napisati program koji omoguÃ¦ava rad s binarnim stablom pretraÅ¾ivanja. Treba
+omoguÃ¦iti unoÅ¡enje novog elementa u stablo, ispis elemenata (inorder, preorder, postorder i
+level order), brisanje i pronalaÅ¾enje nekog elementa.*/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
@@ -131,14 +131,14 @@ int Enqueue(struct Queue* q, Tree t) {
 	return 0;
 }
 
-// Vaðenje elementa iz Reda (Dequeue) - vadi se s poèetka (head)
-// Vraæa pokazivaè na èvor stabla (Tree)
+// VaÃ°enje elementa iz Reda (Dequeue) - vadi se s poÃ¨etka (head)
+// VraÃ¦a pokazivaÃ¨ na Ã¨vor stabla (Tree)
 Tree Dequeue(struct Queue* q) {
 	if (q == NULL || q->head == NULL) {
 		return NULL; // Red je prazan ili nevalidan
 	}
 
-	// 1. Priprema za brisanje i vraæanje vrijednosti
+	// 1. Priprema za brisanje i vraÃ¦anje vrijednosti
 	struct QueueElement* temp = q->head;
 	Tree treeNodeToReturn = temp->node;
 
@@ -148,7 +148,7 @@ Tree Dequeue(struct Queue* q) {
 	// 3. Oslobodi memoriju temp
 	free(temp);
 
-	// 4. Ažuriraj tail ako je Red postao prazan
+	// 4. AÅ¾uriraj tail ako je Red postao prazan
 	if (q->head == NULL) {
 		q->tail = NULL;
 	}
@@ -175,12 +175,12 @@ int LevelOrder(Tree Root) {
 
 	// 1. Inicijalizacija Reda
 	if (InitializeQueue(&q) != 0) {
-		return -1; // Greška pri inicijalizaciji
+		return -1; // GreÅ¡ka pri inicijalizaciji
 	}
 
 	// 2. Stavi korijen u Red
 	if (Enqueue(&q, Root) != 0) {
-		// Ako Enqueue ne uspije, Red je možda neispravan
+		// Ako Enqueue ne uspije, Red je moÅ¾da neispravan
 		return -1;
 	}
 
@@ -193,11 +193,11 @@ int LevelOrder(Tree Root) {
 		Tree currentNode = Dequeue(&q);
 
 		// Trebali bismo provjeriti je li Dequeue vratio NULL, ali 
-		// buduæi da je petlja kontrolirana s IsQueueEmpty, to se ne bi smjelo dogoditi.
+		// buduÃ¦i da je petlja kontrolirana s IsQueueEmpty, to se ne bi smjelo dogoditi.
 
-		// Ispiši vrijednost
+		// IspiÅ¡i vrijednost
 		if (printf("%d ", currentNode->data) < 0) {
-			return -1; // Greška pri ispisu
+			return -1; // GreÅ¡ka pri ispisu
 		}
 
 		// 4. Stavi lijevo dijete u Red (ako postoji)
@@ -224,7 +224,7 @@ Tree FindMin(Tree Root) {
 		return NULL;
 	}
 
-	// Iterativno idemo lijevo dok ne doðemo do kraja
+	// Iterativno idemo lijevo dok ne doÃ°emo do kraja
 	while (Root->left != NULL) {
 		Root = Root->left;
 	}
@@ -234,47 +234,47 @@ Tree FindMin(Tree Root) {
 
 int DeleteNode(Tree* RootPtr, int data) {
 
-	// Kljuèno: radimo s pokazivaèem na pokazivaè (*RootPtr) kako bismo
+	// KljuÃ¨no: radimo s pokazivaÃ¨em na pokazivaÃ¨ (*RootPtr) kako bismo
 	// mogli trajno promijeniti vezu roditelju (ili korijenu).
 	Tree Root = *RootPtr;
 
-	// BAZNI SLUÈAJ: Stablo je prazno ili element nije pronaðen
+	// BAZNI SLUÃˆAJ: Stablo je prazno ili element nije pronaÃ°en
 	if (Root == NULL) {
 		printf("Error: Element %d not found in the tree.\n", data);
 		return -1;
 	}
 
-	// 1. REKURZIVNA POTRAGA: Pronaði èvor za brisanje
+	// 1. REKURZIVNA POTRAGA: PronaÃ°i Ã¨vor za brisanje
 	if (data < Root->data) {
-		// Traženi element je u lijevom podstablu
+		// TraÅ¾eni element je u lijevom podstablu
 		return DeleteNode(&(Root->left), data);
 	}
 	else if (data > Root->data) {
-		// Traženi element je u desnom podstablu
+		// TraÅ¾eni element je u desnom podstablu
 		return DeleteNode(&(Root->right), data);
 	}
 	else {
-		// 2. PRONAÐEN JE ÈVOR ZA BRISANJE (Root je èvor koji treba obrisati)
+		// 2. PRONAÃEN JE ÃˆVOR ZA BRISANJE (Root je Ã¨vor koji treba obrisati)
 
-		// SLUÈAJ 1: Èvor s nula ili jednim djetetom
+		// SLUÃˆAJ 1: Ãˆvor s nula ili jednim djetetom
 		if (Root->left == NULL) {
-			Tree temp = Root->right; // Zapamti desno dijete (može biti NULL)
+			Tree temp = Root->right; // Zapamti desno dijete (moÅ¾e biti NULL)
 			free(Root);
-			*RootPtr = temp; // Ažuriraj pokazivaè roditelja (ili korijena)
+			*RootPtr = temp; // AÅ¾uriraj pokazivaÃ¨ roditelja (ili korijena)
 			return 0; // Uspjeh
 		}
 		else if (Root->right == NULL) {
 			Tree temp = Root->left;  // Zapamti lijevo dijete
 			free(Root);
-			*RootPtr = temp; // Ažuriraj pokazivaè roditelja (ili korijena)
+			*RootPtr = temp; // AÅ¾uriraj pokazivaÃ¨ roditelja (ili korijena)
 			return 0; // Uspjeh
 		}
 
-		// SLUÈAJ 2: Èvor s dva djeteta
-		// Pronaði in-order nasljednika (minimum iz desnog podstabla)
+		// SLUÃˆAJ 2: Ãˆvor s dva djeteta
+		// PronaÃ°i in-order nasljednika (minimum iz desnog podstabla)
 		Tree temp = FindMin(Root->right);
 
-		// Kopiraj sadržaj in-order nasljednika u trenutni èvor
+		// Kopiraj sadrÅ¾aj in-order nasljednika u trenutni Ã¨vor
 		Root->data = temp->data;
 
 		return DeleteNode(&(Root->right), temp->data);
@@ -285,20 +285,20 @@ int DeleteNode(Tree* RootPtr, int data) {
 
 
 Tree Find(Tree Root, int data) {
-	// 1. Bazni sluèaj: Element nije pronaðen (stiglo se do NULL) ILI je element pronaðen
+	// 1. Bazni sluÃ¨aj: Element nije pronaÃ°en (stiglo se do NULL) ILI je element pronaÃ°en
 	if (Root == NULL || Root->data == data) {
 		return Root;
 	}
 
 	// 2. Idi lijevo (data < Root->data)
 	if (data < Root->data) {
-		// Vraæamo rezultat rekurzivnog poziva za lijevo podstablo
+		// VraÃ¦amo rezultat rekurzivnog poziva za lijevo podstablo
 		return Find(Root->left, data);
 	}
 
 	// 3. Idi desno (data > Root->data)
 	else {
-		// Vraæamo rezultat rekurzivnog poziva za desno podstablo
+		// VraÃ¦amo rezultat rekurzivnog poziva za desno podstablo
 		return Find(Root->right, data);
 	}
 }
@@ -340,7 +340,7 @@ int main() {
 		case 1: // Unos novog elementa
 			printf("Unesite element za unosenje: ");
 			if (scanf("%d", &data) == 1) {
-				// Kljuèno: rezultat rekurzivnog umetanja se MORA dodijeliti root varijabli!
+				// KljuÃ¨no: rezultat rekurzivnog umetanja se MORA dodijeliti root varijabli!
 				root = insertNewEl(data, root);
 				printf("Element %d je unesen.\n", data);
 			}
@@ -392,11 +392,11 @@ int main() {
 		case 7: // Brisanje elementa
 			printf("Unesite element za brisanje: ");
 			if (scanf("%d", &data) == 1) {
-				// Poziv DeleteNode, prosljeðujemo adresu pokazivaèa na korijen
+				// Poziv DeleteNode, prosljeÃ°ujemo adresu pokazivaÃ¨a na korijen
 				if (DeleteNode(&root, data) == 0) {
 					printf("Element %d je uspjesno obrisan.\n", data);
 				}
-				// Greška pri brisanju se ispisuje unutar DeleteNode
+				// GreÅ¡ka pri brisanju se ispisuje unutar DeleteNode
 			}
 			else {
 				printf("Neispravan unos.\n");
