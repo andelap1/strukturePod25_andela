@@ -1,0 +1,5 @@
+Pariz, 2148000
+Marseille, 861000
+Lyon, 513000
+Toulouse, 471000
+Nica, 342000

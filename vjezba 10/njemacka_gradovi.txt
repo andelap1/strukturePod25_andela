@@ -1,0 +1,4 @@
+Berlin, 3700000
+Munchen, 1500000
+Hamburg, 1800000
+Frankfurt, 748000
