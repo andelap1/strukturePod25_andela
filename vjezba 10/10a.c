@@ -1,10 +1,10 @@
-/*10. Napisati program koji èita datoteku drzave.txt u kojoj su zapisani nazivi pojedinih država. Uz
-ime države u datoteci se nalazi i ime dodatne datoteke u kojoj se nalaze gradovi pojedine
-države. Svaka datoteka koja predstavlja državu sadrži popis gradova u formatu naziv_grada,
+/*10. Napisati program koji Ã¨ita datoteku drzave.txt u kojoj su zapisani nazivi pojedinih drÅ¾ava. Uz
+ime drÅ¾ave u datoteci se nalazi i ime dodatne datoteke u kojoj se nalaze gradovi pojedine
+drÅ¾ave. Svaka datoteka koja predstavlja drÅ¾avu sadrÅ¾i popis gradova u formatu naziv_grada,
 broj_stanovnika.
 
-a) Potrebno je formirati sortiranu vezanu listu država po nazivu. Svaki èvor vezane liste
-sadrži stablo gradova sortirano po broju stanovnika, zatim po nazivu grada.
+a) Potrebno je formirati sortiranu vezanu listu drÅ¾ava po nazivu. Svaki Ã¨vor vezane liste
+sadrÅ¾i stablo gradova sortirano po broju stanovnika, zatim po nazivu grada.
 */
 
 #define _CRT_SECURE_NO_WARNINGS 
@@ -168,15 +168,16 @@ int FoundCountryAndItsCities(countryPosition head, char* countryName, int limit)
     return 0;
 }
 
-void freeTree(cityPosition root) {
+int freeTree(cityPosition root) {
     if (root != NULL) {
         freeTree(root->left);  
         freeTree(root->right); 
         free(root);            
     }
+ return 0;
 }
 
-void freeAll(countryPosition head) {
+int freeAll(countryPosition head) {
     countryPosition temp;
 
     while (head != NULL) {
@@ -186,6 +187,7 @@ void freeAll(countryPosition head) {
         freeTree(temp->root); 
         free(temp);           
     }
+ return 0;
 }
 
 int main() {
@@ -221,4 +223,5 @@ int main() {
     freeAll(head);
     
     return 0;
+
 }
