@@ -1,0 +1,5 @@
+Hrvatska hrvatska_gradovi.txt
+Njemacka njemacka_gradovi.txt
+Francuska francuska_gradovi.txt
+Italija italija_gradovi.txt
+Portugal portugal_gradovi.txt
