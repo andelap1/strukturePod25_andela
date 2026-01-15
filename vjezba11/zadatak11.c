@@ -1,7 +1,7 @@
-/*11. Prepraviti zadatak 10 na naèin da se formira hash tablica država. Tablica ima 11 mjesta, a
-funkcija za preslikavanje kljuè raèuna da se zbraja ASCII vrijednost prvih pet slova države zatim
-raèuna ostatak cjelobrojnog dijeljenja te vrijednosti s velièinom tablice. Države s istim kljuèem se
-pohranjuju u vezanu listu sortiranu po nazivu države. Svaki èvor vezane liste sadrži stablo
+/*11. Prepraviti zadatak 10 na naÃ¨in da se formira hash tablica drÅ¾ava. Tablica ima 11 mjesta, a
+funkcija za preslikavanje kljuÃ¨ raÃ¨una da se zbraja ASCII vrijednost prvih pet slova drÅ¾ave zatim
+raÃ¨una ostatak cjelobrojnog dijeljenja te vrijednosti s veliÃ¨inom tablice. DrÅ¾ave s istim kljuÃ¨em se
+pohranjuju u vezanu listu sortiranu po nazivu drÅ¾ave. Svaki Ã¨vor vezane liste sadrÅ¾i stablo
 gradova sortirano po broju stanovnika, zatim po nazivu grada.*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -84,8 +84,7 @@ cityPosition readCitiesFromFile(const char* name) {
 
     if (fp == NULL)
         return NULL;
-
-    /* Expected format: CityName, population    (one per line) */
+    
     while (fscanf(fp, " %[^,], %d", cityName, &pop) == 2) {
         root = insertNewCity(cityName, pop, root);
     }
@@ -106,29 +105,32 @@ int hash1(const char* Country, int tabSize) {
 
 
 countryPosition insertCountryInTable(countryPosition table[], const char* name, const char* fileName) {
-    int index = hash1(name, TABLE_SIZE);
+    int index = hash1(name, TABLE_SIZE); //odredivanje indeksa u koji drzava pripada pomocu hash funkcije
 
-    countryPosition newCountry = (countryPosition)malloc(sizeof(struct countryNode));
+    countryPosition newCountry = (countryPosition)malloc(sizeof(struct countryNode)); //memorija za novi cvor u hash tablici
     if (!newCountry) return NULL;
 
-    strncpy(newCountry->name, name, MAX_NAME - 1);
+    strncpy(newCountry->name, name, MAX_NAME - 1); 
     newCountry->name[MAX_NAME - 1] = '\0';
-    newCountry->root = readCitiesFromFile(fileName);
+    newCountry->root = readCitiesFromFile(fileName); //gradovi idu u stablo
     newCountry->next = NULL;
 
-    countryPosition head = table[index];
+    countryPosition head = table[index]; //dohvacanje glavne vezane liste na izracunatom indeksu
 
-    if (head == NULL || strcmp(name, head->name) < 0) {
+    //provjer treba li novi element umetnuti na pocetak liste
+    if (head == NULL || strcmp(name, head->name) < 0) { 
         newCountry->next = head;
-        table[index] = newCountry;
+        table[index] = newCountry; //azuriranje heada u tablici
         return newCountry;
     }
 
+    //trazenje mjesta unutar vezane liste na tom indeksu kako bi drzave bile sortirane
     countryPosition current = head;
     while (current->next != NULL && strcmp(current->next->name, name) < 0) {
         current = current->next;
     }
 
+    //umetanje elemenata u listu
     newCountry->next = current->next;
     current->next = newCountry;
 
@@ -146,11 +148,11 @@ int printCities(cityPosition root) {
 
 int printCountriesAndCities(countryPosition table[]) {
     int empty = 1;
-    for (int i = 0; i < TABLE_SIZE; ++i) {
-        countryPosition current = table[i];
-        if (current == NULL) continue;
+    for (int i = 0; i < TABLE_SIZE; ++i) { //prolazak kroz hash tablicu
+        countryPosition current = table[i]; //postavljanje na pocetak liste u i-tom bucketu
+        if (current == NULL) continue; //preskoci ako je bucket prazan
         empty = 0;
-        printf("\n-- Bucket %d --\n", i);
+        printf("\n-- Bucket %d --\n", i); //ispis rednog broja pretinca u tablici
         while (current != NULL) {
             printf("Drzava: %s\n", current->name);
             printf("Gradovi:\n");
@@ -158,9 +160,9 @@ int printCountriesAndCities(countryPosition table[]) {
                 printf("Nema upisanih gradova.\n");
             }
             else {
-                printCities(current->root);
+                printCities(current->root); //ispis stabla gradova za tu drzavu
             }
-            current = current->next;
+            current = current->next; //idi na iducu drzavu u tom bucketu
             printf("\n");
         }
     }
@@ -183,6 +185,7 @@ int printFilteredCities(cityPosition root, int limit) {
 }
 
 int FoundCountryAndItsCities(countryPosition table[], const char* countryName, int limit) {
+    //hash funkcija kako bi odmah znali u kojem bucketu trazimo 
     int index = hash1(countryName, TABLE_SIZE);
     countryPosition current = table[index];
 
@@ -190,6 +193,7 @@ int FoundCountryAndItsCities(countryPosition table[], const char* countryName, i
         current = current->next;
     }
 
+    //ako na kraju liste nismo nasli ime drzave
     if (current == NULL) {
         printf("Drzava nije pronadjena u tablici.\n");
         return 0;
@@ -212,14 +216,14 @@ int freeTree(cityPosition root) {
 }
 
 int freeAll(countryPosition table[]) {
-    for (int i = 0; i < TABLE_SIZE; ++i) {
+    for (int i = 0; i < TABLE_SIZE; ++i) { //prolazak kroz svaki indeks tablice
         countryPosition head = table[i];
         countryPosition temp;
-        while (head != NULL) {
+        while (head != NULL) { //brisanje vezane liste drzava na tom indeksu
             temp = head;
             head = head->next;
             freeTree(temp->root);
-            free(temp);
+            free(temp); //brisanje drzave iz tablice
         }
         table[i] = NULL;
     }
@@ -227,7 +231,7 @@ int freeAll(countryPosition table[]) {
 }
 
 int main() {
-    countryPosition table[TABLE_SIZE] = { 0 };
+    countryPosition table[TABLE_SIZE] = { 0 }; // Inicijalizacija hash tablice, niz pokazivaca postavlja se na NULL
     char countryName[MAX_NAME];
     char fileName[MAX_NAME];
 
@@ -270,5 +274,6 @@ int main() {
     freeAll(table);
 
     return 0;
+
 
 }
